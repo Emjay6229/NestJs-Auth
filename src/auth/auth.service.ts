@@ -51,7 +51,7 @@ export class AuthService {
           role: user.role
         };
 
-      const access_token = await this.jwtService.signAsync(payload, { expiresIn: "1d" });
+        const access_token = await this.jwtService.signAsync(payload, { expiresIn: "1d" });
 
         return {
             message: "Sign in successful",
