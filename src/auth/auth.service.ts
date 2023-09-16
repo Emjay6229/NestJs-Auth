@@ -34,7 +34,7 @@ export class AuthService {
     };
 
     async signin(dto: signinDto) {
-        const user = await this.userModel.findOne({ email: dto.email }).select("firstName lastName email role");
+        const user = await this.userModel.findOne({ email: dto.email });
 
         if (!user) 
             throw new UnauthorizedException("Credentials do not exist");
@@ -56,7 +56,12 @@ export class AuthService {
         return {
             message: "Sign in successful",
             access_token,
-            user
+            user: {
+                id: user._id,
+                username: `${user.firstName} ${user.lastName}`,
+                email: user.email,
+                role: user.role
+            }
         };
     };
 };
