@@ -8,6 +8,6 @@ async function bootstrap() {
     // strips out elements not defined in the dto
     whitelist: true
   }))
-  await app.listen(3000, () => console.log("app started on port " + 3000));
+  await app.listen(3000, () => console.log("app started on port " + process.env.port));
 }
 bootstrap();
