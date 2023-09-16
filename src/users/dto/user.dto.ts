@@ -14,7 +14,5 @@ export class UserDto {
     email: string;
 
     @IsString()
-    role: string
-
+    role: string;
 };
-
