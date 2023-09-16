@@ -9,37 +9,22 @@ export class UserService {
     constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {}
 
     async getMyProfile(id: string) {
-        const user = await this.userModel.findById(id).select('firstName lastName email phoneNumber role');
+        const user = await this.userModel.findById(id).select('firstName lastName email role');
 
-        if (!user) {
-            throw new Error("Credentials not found")
-        };
+        if (!user)
+            throw new Error("Credentials not found");
 
-        return {
-            user: {
-                name: `${user.firstName} ${user.lastName}`,
-                email: user.email,
-                "phone number": user.phoneNumber,
-                role: user.role
-            }
-        }
+        return { user };
     };
 
     async updateMyProfile(id: string, dto: UserDto) {
-        const user = await this.userModel.findByIdAndUpdate(id, dto, { new: true, runValidators: true });
+        const user = await this.userModel.findByIdAndUpdate(id, dto, { new: true, runValidators: true })
+            .select('firstName lastName email role');
 
-        if (!user) {
-            throw new Error("Credentials not found")
-        }
+        if (!user)
+            throw new Error("Credentials not found");
 
-        return {
-            user: {
-                name: `${user.firstName} ${user.lastName}`,
-                email: user.email,
-                "phone number": user.phoneNumber,
-                role: user.role
-            }
-        }
+        return { user }
     };
 
     async deleteProfile(id: string) {

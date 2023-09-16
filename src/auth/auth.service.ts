@@ -26,14 +26,15 @@ export class AuthService {
         const user = new this.userModel(dto);
 
         await user.save();
+        
         return {
             message: "User created successfully",
             user,
         }; 
-    }
+    };
 
     async signin(dto: signinDto) {
-        const user = await this.userModel.findOne({ email: dto.email });
+        const user = await this.userModel.findOne({ email: dto.email }).select("firstName lastName email role");
 
         if (!user) 
             throw new UnauthorizedException("Credentials do not exist");
@@ -43,7 +44,6 @@ export class AuthService {
         if(!passMatch) 
             throw new BadRequestException("Incorrect Credentials");
 
-        // sign jwt token
         const payload = {
           id: user._id,
           username: `${user.firstName} ${user.lastName}`,
@@ -56,11 +56,7 @@ export class AuthService {
         return {
             message: "Sign in successful",
             access_token,
-            user: {
-                name: `${user.firstName} ${user.lastName}`,
-                email: user.email,
-                role: user.role,
-            }
+            user
         };
     };
-} 
+};

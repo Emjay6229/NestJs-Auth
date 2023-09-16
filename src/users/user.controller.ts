@@ -17,19 +17,19 @@ export class UserController {
 
     @UseGuards(AuthGuard)
     @Get()
-    getMyProfile(@Request() req ) {
+    getMyProfile(@Request() req: any) {
         return this.userService.getMyProfile(req.user.id);
     };
 
     @UseGuards(AuthGuard)
     @Patch()
-    updateMyProfile(@Request() req, @Body() dto: UserDto) {
+    updateMyProfile(@Request() req: any, @Body() dto: UserDto) {
         return this.userService.updateMyProfile(req.user.id, dto);
     };
 
     @UseGuards(AuthGuard)
     @Delete()
-    deleteProfile(@Request() req) {
+    deleteProfile(@Request() req: any) {
         return this.userService.deleteProfile(req.user.id);
     }
 }
