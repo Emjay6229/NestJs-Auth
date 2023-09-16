@@ -27,4 +27,4 @@ export class Order {
     price: string;
 }
 
-export const OrderSchema = SchemaFactory.createForClass(User);
+export const OrderSchema = SchemaFactory.createForClass(Order);
