@@ -1,19 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
+import { JwtService } from "@nestjs/jwt";
 import { signinDto, signupDto } from "./dto";
 import { User } from "src/auth/schemas/user.schema";
 import * as argon from "argon2";
 
 @Injectable()
 export class AuthService {
-    constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {}
+    constructor(
+        @InjectModel(User.name) private readonly userModel: Model<User>,
+        private jwtService: JwtService
+      ) {}
 
     async signup(dto: signupDto) {
         const checkUser = await this.userModel.findOne({ email: dto.email }).select('email');
 
         if (checkUser) 
-            throw new Error("Credentials taken");
+            throw new BadRequestException("Credentials taken");
 
         const securePass = await argon.hash(dto.password);
 
@@ -32,15 +36,26 @@ export class AuthService {
         const user = await this.userModel.findOne({ email: dto.email });
 
         if (!user) 
-            throw new Error("Credentials do not exist");
+            throw new UnauthorizedException("Credentials do not exist");
 
         const passMatch = await argon.verify(user.password, dto.password);
 
         if(!passMatch) 
-            throw new Error("Incorrect Credentials");
+            throw new BadRequestException("Incorrect Credentials");
+
+        // sign jwt token
+        const payload = {
+          id: user._id,
+          username: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role
+        };
+
+      const access_token = await this.jwtService.signAsync(payload, { expiresIn: "1d" });
 
         return {
             message: "Sign in successful",
+            access_token,
             user: {
                 name: `${user.firstName} ${user.lastName}`,
                 email: user.email,

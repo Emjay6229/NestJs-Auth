@@ -4,5 +4,6 @@ interface IMongoDbConfig {
 
 interface IConfig {
     port: number
+    jwtSecret: string
     database: IMongoDbConfig
 }
