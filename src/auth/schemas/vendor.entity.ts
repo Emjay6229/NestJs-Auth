@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument} from "mongoose";
 
-export type UserDocument = HydratedDocument<User>;
+export type VendorDocument = HydratedDocument<Vendor>;
 
 @Schema({
     timestamps: true,
     autoIndex: false
 })
-export class User {
+export class Vendor {
     @Prop({ 
         required: true,
         trim: true
@@ -18,7 +18,7 @@ export class User {
         required: true,
         trim: true
     })
-    lastName: string;
+    restaurantName: string;
 
     @Prop({ 
         required: true,
@@ -29,17 +29,28 @@ export class User {
     email: string;
 
     @Prop({ 
-        required: true ,
-        trim: true,
-        minlength: 6
-    })
-    password: string;
-
-    @Prop({ 
         required: true,
         trim: true 
     })
     phoneNumber: string;
+
+    @Prop({ 
+        required: true ,
+        trim: true,
+        minlength: 8
+    })
+    password: string;
+
+  @Prop({ 
+      required: true,
+      trim: true
+    })
+    address: {
+        streetName: string,
+        LGA: string,
+        state: string,
+        number: string
+    };
 
     @Prop({
         enum: ["admin", "customer", "vendor"],
@@ -48,4 +59,4 @@ export class User {
     role: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const VendorSchema = SchemaFactory.createForClass(Vendor);

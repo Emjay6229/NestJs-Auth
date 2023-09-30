@@ -12,7 +12,9 @@ export class AuthGuard implements CanActivate {
       ) {}
 
     async canActivate(context: ExecutionContext) {
+        // switch to Http in order to access http requests
         const req = context.switchToHttp().getRequest();
+        // extract token
         const token = this.extractTokenFromHeader(req);
 
         if(!token) throw new UnauthorizedException();
@@ -24,7 +26,7 @@ export class AuthGuard implements CanActivate {
                 secret: this.config.get<string>("jwtSecret") 
               }
             );
-
+            // attach the payload to a user object in the request
             req.user = payload;
         } catch {
           throw new UnauthorizedException();
@@ -34,8 +36,9 @@ export class AuthGuard implements CanActivate {
     };
 
   private extractTokenFromHeader(req: Request): string | undefined {
-    // destructuring assignment, optional chaining, and the nullish coalescing operator
+    // array destructuring assignment, optional chaining, and the nullish coalescing operator
     const [type, token] = req.headers.authorization?.split(' ') ?? [];
+    // if type is "Bearer", return token else return "undefined"
     return type === 'Bearer' ? token : undefined;
   };
 }

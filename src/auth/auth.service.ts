@@ -1,54 +1,53 @@
 import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, ObjectId } from "mongoose";
+import { Model } from "mongoose";
 import { JwtService } from "@nestjs/jwt";
 import { signinDto, signupDto } from "./dto";
-import { User } from "src/auth/schemas/user.schema";
+import { Vendor } from "src/auth/schemas/vendor.entity";
 import * as argon from "argon2";
 
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectModel(User.name) private readonly userModel: Model<User>,
+        @InjectModel(Vendor.name) private readonly vendorModel: Model<Vendor>,
         private jwtService: JwtService
       ) {}
 
     async signup(dto: signupDto) {
-        const checkUser = await this.userModel.findOne({ email: dto.email }).select('email');
+        const checkVendor = await this.vendorModel.findOne({ email: dto.email }).select('email');
 
-        if (checkUser) 
+        if (checkVendor) 
             throw new BadRequestException("Credentials taken");
 
         const securePass = await argon.hash(dto.password);
 
         dto.password = securePass;
 
-        const user = new this.userModel(dto);
+        const vendor = new this.vendorModel(dto);
 
-        await user.save();
+        await vendor.save();
         
         return {
             message: "User created successfully",
-            user,
+            vendor,
         }; 
     };
 
     async signin(dto: signinDto) {
-        const user = await this.userModel.findOne({ email: dto.email });
+        const vendor = await this.vendorModel.findOne({ email: dto.email });
 
-        if (!user) 
+        if (!vendor) 
             throw new UnauthorizedException("Credentials do not exist");
 
-        const passMatch = await argon.verify(user.password, dto.password);
+        const passwordMatch = await argon.verify(vendor.password, dto.password);
 
-        if(!passMatch) 
+        if(!passwordMatch) 
             throw new BadRequestException("Incorrect Credentials");
 
         const payload = {
-          id: user._id,
-          username: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          role: user.role
+          id: vendor._id,
+          retaurantName: `${vendor.restaurantName}`,
+          email: vendor.email
         };
 
         const access_token = await this.jwtService.signAsync(payload, { expiresIn: "1d" });
@@ -56,11 +55,10 @@ export class AuthService {
         return {
             message: "Sign in successful",
             access_token,
-            user: {
-                id: user._id,
-                username: `${user.firstName} ${user.lastName}`,
-                email: user.email,
-                role: user.role
+            vendorData: {
+                id: vendor._id,
+                retaurantName: `${vendor.restaurantName}`,
+                email: vendor.email
             }
         };
     };

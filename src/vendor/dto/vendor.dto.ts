@@ -1,13 +1,13 @@
 import { IsEmail, IsString, IsOptional } from "class-validator";
 
-export class UserDto {
+export class VendorDto {
     @IsString()
     @IsOptional()
-    firstName?: string;
+    name?: string;
 
     @IsString()
     @IsOptional()
-    lastName?: string;
+    restaurantame?: string;
 
     @IsString()
     @IsOptional()
@@ -17,9 +17,4 @@ export class UserDto {
     @IsString()
     @IsOptional()
     email?: string;
-
-    @IsString()
-    @IsOptional()
-    role?: string
-
 };
