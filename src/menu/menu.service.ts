@@ -9,13 +9,15 @@ export class MenuService {
 constructor( @InjectModel(Menu.name) private readonly menuModel: Model<Menu> ) {}
 
 	async createMenu(vendorId: ObjectId, dto: menuDto) {
-		try{
+		try {
 			const checkMenu = await this.menuModel.findOne({ meal: dto.meal });
 
-			if(checkMenu)
-				if(checkMenu.category === dto.category)
+			if (checkMenu) {
+				if (checkMenu.category === dto.category) {
 					throw new BadRequestException(`${dto.meal} already exists in category ${checkMenu.category}`);
-
+				}
+			}
+				
 			const menu = new this.menuModel({ vendor: vendorId, ...dto })
 
 			await menu.save();
