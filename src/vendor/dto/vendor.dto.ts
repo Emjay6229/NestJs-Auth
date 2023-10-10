@@ -1,20 +1,32 @@
 import { IsEmail, IsString, IsOptional } from "class-validator";
 
-export class VendorDto {
+export class EditVendorDto {
     @IsString()
     @IsOptional()
-    name?: string;
+    name: string;
 
     @IsString()
     @IsOptional()
-    restaurantame?: string;
+    restaurantName: string;
 
     @IsString()
     @IsOptional()
-    phoneNumber?: string;
+    password: string;
+
+    @IsString()
+    @IsOptional()
+    address: string;
+
+    @IsString()
+    @IsOptional()
+    phoneNumber: string;
 
     @IsEmail()
     @IsString()
     @IsOptional()
-    email?: string;
+    email: string;
+
+    @IsString()
+    @IsOptional()
+    website: string
 };

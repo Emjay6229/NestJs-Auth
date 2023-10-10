@@ -1,8 +1,8 @@
-import { Injectable, Param} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { VendorDto } from './dto';
-import { Vendor } from '../auth/schemas/vendor.entity';
+import { EditVendorDto } from './dto';
+import { Vendor } from './schemas/vendor.entity';
 
 @Injectable()
 export class VendorService {
@@ -11,8 +11,9 @@ export class VendorService {
         private readonly vendorModel: Model<Vendor>
       ) {}
 
-    async getMyProfile(id: string) {
-        const vendor = await this.vendorModel.findById(id).select('restaurantName email address');
+    async getMyProfile(id: any) {
+        const vendor = await this.vendorModel.findById(id)
+            .select('restaurantName email address rating review website');
 
         if (!vendor)
             throw new Error("Credentials not found");
@@ -20,7 +21,7 @@ export class VendorService {
         return { vendor };
     };
 
-    async updateMyProfile(id: string, dto: VendorDto) {
+    async updateMyProfile(id: any, dto: EditVendorDto) {
         const vendor = await this.vendorModel.findByIdAndUpdate(id, dto, { new: true, runValidators: true })
             .select('restaurantName email address');
 
@@ -30,8 +31,8 @@ export class VendorService {
         return { vendor }
     };
 
-    async deleteProfile(id: string) {
+    async deleteProfile(id: any) {
       await this.vendorModel.findByIdAndDelete(id);
-      return { message: `vendor ${id} has been deleted`}
+      return { message: `vendor with id of ${id} has been deleted`}
     }
 }

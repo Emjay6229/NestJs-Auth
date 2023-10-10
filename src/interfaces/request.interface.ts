@@ -1,8 +1,18 @@
 import { ObjectId } from "mongoose";
 
-export interface IReq {
+export interface IPayload {
     id: ObjectId
     name: string
     email: string
-    role: string
+    restaurantName: string
+    phoneNumber: string
+    address: string
+    openingHour: string
+    closingHour: string
+    minimumPrice: string
+    website: string
+    rating: number
+    review: string
+    active: boolean
+
 }

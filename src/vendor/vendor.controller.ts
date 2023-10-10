@@ -7,7 +7,7 @@ import {
     Request,
     UseGuards
 } from '@nestjs/common';
-import { VendorDto } from './dto';
+import { EditVendorDto } from './dto';
 import { VendorService } from './vendor.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 
@@ -18,18 +18,19 @@ export class VendorController {
     @UseGuards(AuthGuard)
     @Get()
     getMyProfile(@Request() req: any) {
-        return this.vendorService.getMyProfile(req.user.id);
+        console.log(req.user)
+        return this.vendorService.getMyProfile(req.user.vendorId);
     };
 
     @UseGuards(AuthGuard)
     @Patch()
-    updateMyProfile(@Request() req: any, @Body() dto: VendorDto) {
-        return this.vendorService.updateMyProfile(req.user.id, dto);
+    updateMyProfile(@Request() req: any, @Body() dto: EditVendorDto) {
+        return this.vendorService.updateMyProfile(req.user.vendorId, dto);
     };
 
     @UseGuards(AuthGuard)
     @Delete()
     deleteProfile(@Request() req: any) {
-        return this.vendorService.deleteProfile(req.user.id);
+        return this.vendorService.deleteProfile(req.user.vendorId);
     }
 }
