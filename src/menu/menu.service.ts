@@ -43,7 +43,6 @@ constructor( @InjectModel(Menu.name) private readonly menuModel: Model<Menu> ) {
 		}
 	}
 	
-
 	async getMenuItem(menuId: ObjectId) {
 		try{
 			const item = await this.menuModel.findById(menuId)
@@ -58,26 +57,18 @@ constructor( @InjectModel(Menu.name) private readonly menuModel: Model<Menu> ) {
 
 	async editMenuItem(menuId: ObjectId, dto: menuDto) {
 		try {
-			const editedMenu = await this.menuModel.findByIdAndUpdate(
-				menuId, 
-				dto, 
-				{ 
-					new: true, 
-					runValidators: true 
-				}
-			);
+			const editedMenu = await this.menuModel.findByIdAndUpdate( menuId, dto, { new: true, runValidators: true } );
 			
 			if(!editedMenu) throw new NotFoundException("Update failed");
 
 			return { editedMenu };
-
-			} catch(err) {
-				throw new ServiceUnavailableException(err.message);
-			}
+		} catch(err) {
+			throw new ServiceUnavailableException(err.message);
 		}
+	}
 
 	async removeMenuItem(menuId: ObjectId) {
-		try{
+		try {
 			await this.menuModel.findByIdAndDelete(menuId);
 			return "this meal has been successfully deleted";
 		} catch(err) {
