@@ -18,13 +18,13 @@ constructor( @InjectModel(Menu.name) private readonly menuModel: Model<Menu> ) {
 				}
 			}
 				
-			const menu = new this.menuModel({ vendor: vendorId, ...dto })
+			const menu = new this.menuModel({ vendor: vendorId, ...dto });
 
 			await menu.save();
 
 			return { menu };
 		} catch(err) {
-			throw new ServiceUnavailableException(err.message);
+				throw new ServiceUnavailableException(err.message);
 		}		
 	}
 
@@ -32,8 +32,6 @@ constructor( @InjectModel(Menu.name) private readonly menuModel: Model<Menu> ) {
 		try{
 			const items = await this.menuModel.find({ vendor: vendorId })
 				.sort("meal category, vendor");
-
-			console.log(items);
 
 			if (!items) throw new NotFoundException();
 
