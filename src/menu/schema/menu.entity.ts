@@ -20,7 +20,7 @@ export class Menu {
     @Prop({
         required: true
     })
-    category: string;
+    category: string[];
 
     @Prop({
         required: true,

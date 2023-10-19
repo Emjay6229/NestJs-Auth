@@ -1,4 +1,4 @@
-import {IsString, IsNotEmpty, IsBoolean, IsOptional } from "class-validator";
+import {IsString, IsNotEmpty, IsBoolean, IsOptional, IsArray } from "class-validator";
 
 export class menuDto {
     @IsString()
@@ -10,8 +10,9 @@ export class menuDto {
     price: string;
 
     @IsString()
+    @IsArray()
     @IsNotEmpty()
-    category: string;
+    category: string[];
 
     @IsBoolean()
     @IsOptional()
