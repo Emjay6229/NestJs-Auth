@@ -38,5 +38,4 @@ export class MenuController {
     async removeAllMenuItems() {
         return await this.menuService.removeAllMenuItems();
     }
-
 }
