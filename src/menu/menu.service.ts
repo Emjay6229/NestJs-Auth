@@ -11,7 +11,6 @@ constructor( @InjectModel(Menu.name) private readonly menuModel: Model<Menu> ) {
 	async createMenu(vendorId: ObjectId, dto: menuDto) {
 		try {
 			const checkMenu = await this.menuModel.findOne({ meal: dto.meal });
-			
 			if (checkMenu) {
 				if (checkMenu.category === dto.category) {
 					throw new BadRequestException(`${dto.meal} already exists in category ${checkMenu.category}`);
